@@ -6,6 +6,7 @@ import { useState } from "react";
     title?: string;
     time?: string;
   }
+  
 
 export default function Home() {
   const [content, setContent] = useState(""); //学習内容の入力の一時保存場所
