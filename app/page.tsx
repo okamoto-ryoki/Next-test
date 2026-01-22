@@ -1,16 +1,35 @@
 "use client";
 import InputForm from "@/components/InputForm";
 import StudyList from "@/components/StudyList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
   type NewItem = {
     id?: string;
     title?: string;
     time?: string;
   }
-  
 
 export default function Home() {
+
+  useEffect(()=>{
+    const fetchData = async () => {
+      try {
+        const res = await fetch("/api/studies",{
+          cache: "no-store"
+        });
+
+        const data = await res.json();
+
+        setLists(data);
+
+      } catch(error) {
+          console.error("データの取得に失敗しました", error);
+      }
+    }
+
+    fetchData();
+  } ,[]);
+
   const [content, setContent] = useState(""); //学習内容の入力の一時保存場所
   const [time, setTime] = useState(""); //学習時間の入力の一時保存場所
 
@@ -19,11 +38,11 @@ export default function Home() {
   const [error, setError] = useState(false); // 入力が誤りであるときのメッセージの表示、非表示
 
   // const contentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setContent(e.target.value);
+  // setContent(e.target.value);
   // } //学習内容の入力フォーム
 
   // const timeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setTime(e.target.value);
+  // setTime(e.target.value);
   // } //学習時間の入力フォーム
 
   const handleRegister = (e: React.FormEvent) => {
@@ -37,7 +56,7 @@ export default function Home() {
     if(isNaN(Number(time))) {
       setError(true);
       return
-    }  //学習時間の入力フォームに数字以外が入った場合のエラーメッセージの表示
+    }; //学習時間の入力フォームに数字以外が入った場合のエラーメッセージの表示
 
     setError(false); //エラーメッセージが出た場合、ここで非表示に
 
@@ -45,7 +64,7 @@ export default function Home() {
       id: crypto.randomUUID(),
       title: content,
       time: time
-    };  //新しい入力情報のデータを使いやすく、見やすくする
+    }; //新しい入力情報のデータを使いやすく、見やすくする
 
     const section = [...lists, newItem]; //前までのデータと今入力されたデータの保存
     setLists(section);
