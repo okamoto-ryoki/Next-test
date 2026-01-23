@@ -11,24 +11,21 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
 
-  useEffect(()=>{
+  useEffect (() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/studies",{
+        const res = await fetch("/api/studies", {
           cache: "no-store"
         });
-
         const data = await res.json();
-
         setLists(data);
-
-      } catch(error) {
-          console.error("データの取得に失敗しました", error);
+      }catch(error) {
+        console.error("データの取得に失敗しました。", error)
       }
     }
 
     fetchData();
-  } ,[]);
+  },[]);
 
   const [content, setContent] = useState(""); //学習内容の入力の一時保存場所
   const [time, setTime] = useState(""); //学習時間の入力の一時保存場所
@@ -45,7 +42,7 @@ export default function Home() {
   // setTime(e.target.value);
   // } //学習時間の入力フォーム
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault(); //formのsubmitが反応しないように
 
     if (!content || !time) {
@@ -66,7 +63,20 @@ export default function Home() {
       time: time
     }; //新しい入力情報のデータを使いやすく、見やすくする
 
-    const section = [...lists, newItem]; //前までのデータと今入力されたデータの保存
+    try {
+      await fetch("/api/studies", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newItem),
+      });
+    } catch (e) {
+      console.error("保存に失敗しました", e);
+      return;
+    }
+
+    const section = [...(lists || []), newItem]; //前までのデータと今入力されたデータの保存
     setLists(section);
 
     setContent("");
