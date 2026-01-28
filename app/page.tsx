@@ -83,6 +83,27 @@ export default function Home() {
     setTime(""); //入力欄に入力した情報が滞留しないために、useStateのリセット
   }
 
+
+  //  【追加】削除機能
+  const handleDelete = async (id: string) => {
+    try {
+      // 1. APIを呼んでサーバー側のファイルを削除
+      await fetch("/api/studies", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: id }),
+      });
+
+      // 2. 画面のリストからも削除（リロードしなくて済むように）
+      // 「今消したID」と「違うID」のものだけを残す = 消したやつが消える
+      const newLists = lists.filter((item) => item.id !== id);
+      setLists(newLists);
+
+    } catch (error) {
+      console.error("削除に失敗しました", error);
+    }
+  };
+
   return (
     <div className="flex justify-center items-center flex-col min-h-screen bg-[#101828] p-10">
       <InputForm 
@@ -93,7 +114,7 @@ export default function Home() {
       error={error}
       handleRegister={handleRegister}
       ></InputForm>
-      <StudyList lists={lists}></StudyList>
+      <StudyList onDelete={handleDelete} lists={lists}></StudyList>
     </div>
   );
 }
