@@ -13,7 +13,7 @@ type Props = {
 
 export default function InputForm({setContent,setTime,content,time,error,handleRegister}:Props) {
     return (
-      <form className="border-[#303b4a] border-2  bg-[#1e2938] rounded-lg max-w-sm w-full px-6 py-7">
+    <form className="border-[#303b4a] border-2  bg-[#1e2938] rounded-lg max-w-sm w-full px-6 py-7">
         <div className="bg-[#1e2938] mb-4">
           <label className="block bg-[#1e2938] text-sm" htmlFor="content">学習内容</label>
           <input className="border-[#303b4a] rounded-lg border-2 bg-[#101828] w-full mt-1 px-3 py-2" placeholder="学習した内容を入力" onChange={(e)=>setContent(e.target.value)} value={content} type="text" id="content"/>
@@ -27,5 +27,5 @@ export default function InputForm({setContent,setTime,content,time,error,handleR
         </div>
         <div className={`bg-[#1e2938] text-red-500 font-bold  ${error ? "visible" : "invisible"}`}>※入力内容を確認してください。</div>
         <button className="bg-[#4f39f6] rounded-lg text-sm w-full px-12 py-3" onClick={handleRegister}>登録</button>
-      </form> 
+    </form> 
 )}
